@@ -1,0 +1,15 @@
+RIVELA — ESCENA 3D OPTIMIZADA PARA MÓVIL
+
+Archivos:
+- index.html
+- cheesecake.glb
+- rivela-logo.svg
+
+IMPORTANTE:
+Para probarla correctamente, sirve esta carpeta mediante HTTP/HTTPS.
+No conviene abrir index.html directamente con file:// porque algunos navegadores
+bloquean la carga del GLB local.
+
+Ejemplos:
+- VS Code: Live Server
+- Hosting: subir los tres archivos en la misma carpeta.
