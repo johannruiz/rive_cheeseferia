@@ -1,15 +1,17 @@
-RIVELA — ESCENA 3D OPTIMIZADA PARA MÓVIL
+RIVELA — VERSIÓN MÓVIL OPTIMIZADA CON ILUMINACIÓN CONSISTENTE
+
+La iluminación, temperatura de color, environment, fill, rim y exposición
+son ahora iguales en escritorio, iOS y Android.
+
+Las optimizaciones móviles se limitan a:
+- pixel ratio
+- tamaño de shadow maps
+- resolución de textura procedural de madera
+- antialiasing según capacidad del dispositivo
 
 Archivos:
 - index.html
 - cheesecake.glb
 - rivela-logo.svg
 
-IMPORTANTE:
-Para probarla correctamente, sirve esta carpeta mediante HTTP/HTTPS.
-No conviene abrir index.html directamente con file:// porque algunos navegadores
-bloquean la carga del GLB local.
-
-Ejemplos:
-- VS Code: Live Server
-- Hosting: subir los tres archivos en la misma carpeta.
+Servir por HTTP/HTTPS. Evitar abrir index.html directamente con file://.

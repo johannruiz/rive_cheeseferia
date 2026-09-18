@@ -162,8 +162,8 @@ const QUALITY = {
   shadow: lowEnd ? 512 : mobile ? 1024 : 2048,
   woodW: lowEnd ? 512 : mobile ? 768 : 1024,
   woodH: lowEnd ? 384 : mobile ? 512 : 768,
-  useEnvironment: !lowEnd,
-  useAreaLights: !lowEnd
+  useEnvironment: true,
+  useAreaLights: true
 };
 
 // ============================================================
@@ -205,7 +205,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = mobile ? 0.96 : 0.92;
+renderer.toneMappingExposure = 0.92;
 
 document.body.appendChild(renderer.domElement);
 
@@ -265,7 +265,7 @@ if (QUALITY.useEnvironment) {
   const room = new RoomEnvironment();
 
   scene.environment = pmrem.fromScene(room, 0.025).texture;
-  scene.environmentIntensity = mobile ? 0.22 : 0.28;
+  scene.environmentIntensity = 0.28;
 
   room.dispose();
   pmrem.dispose();
@@ -398,16 +398,16 @@ scene.add(floor);
 // ============================================================
 scene.add(
   new THREE.HemisphereLight(
-    0xffd9c0,
-    0x100607,
-    lowEnd ? .32 : .26
+    0xffd6ba,
+    0x120708,
+    0.28
   )
 );
 
 // Principal: sombra cálida y editorial.
 const sun = new THREE.DirectionalLight(
-  0xffb36c,
-  mobile ? 3.55 : 4.15
+  0xffb56f,
+  4.25
 );
 
 sun.position.set(6.7, 8.8, 4.0);
@@ -426,9 +426,9 @@ scene.add(sun);
 
 // Rebote cálido.
 const bounce = new THREE.PointLight(
-  0xb64b2d,
-  mobile ? 5.4 : 6.8,
-  8.0,
+  0xb94d2e,
+  7.0,
+  8.5,
   2
 );
 bounce.position.set(2.6, .85, 1.25);
@@ -436,47 +436,37 @@ scene.add(bounce);
 
 // Rim posterior.
 const rim = new THREE.PointLight(
-  0xffc7ad,
-  mobile ? 3.5 : 4.8,
-  7,
+  0xffc6aa,
+  5.2,
+  7.0,
   2
 );
 rim.position.set(-1.8, 3.5, -3.0);
 scene.add(rim);
 
-// Area lights solo en equipos con más margen.
-if (QUALITY.useAreaLights) {
-  RectAreaLightUniformsLib.init();
+// Misma iluminación en escritorio, iOS y Android.
+// Las optimizaciones móviles afectan resolución/sombras, no el color de la escena.
+RectAreaLightUniformsLib.init();
 
-  const warmSoft = new THREE.RectAreaLight(
-    0xff9f68,
-    11.5,
-    4.2,
-    2.8
-  );
-  warmSoft.position.set(4.5, 5.3, 3.5);
-  warmSoft.lookAt(0, .75, 0);
-  scene.add(warmSoft);
+const warmSoft = new THREE.RectAreaLight(
+  0xff9f68,
+  13.5,
+  4.4,
+  3.0
+);
+warmSoft.position.set(4.6, 5.4, 3.6);
+warmSoft.lookAt(0, .75, 0);
+scene.add(warmSoft);
 
-  const coolFill = new THREE.RectAreaLight(
-    0x927184,
-    2.8,
-    3.8,
-    2.8
-  );
-  coolFill.position.set(-4.2, 3.0, 2.0);
-  coolFill.lookAt(0, .7, 0);
-  scene.add(coolFill);
-} else {
-  // Sustitutos baratos para Android de gama baja.
-  const warm = new THREE.PointLight(0xff9f68, 5.0, 9, 2);
-  warm.position.set(4.2, 4.4, 3.2);
-  scene.add(warm);
-
-  const fill = new THREE.PointLight(0x8b6b80, 1.8, 8, 2);
-  fill.position.set(-3.5, 2.8, 2.0);
-  scene.add(fill);
-}
+const coolFill = new THREE.RectAreaLight(
+  0x9f7896,
+  3.4,
+  4.0,
+  3.0
+);
+coolFill.position.set(-4.4, 3.2, 2.1);
+coolFill.lookAt(0, .7, 0);
+scene.add(coolFill);
 
 // ============================================================
 // SOMBRAS DIAGONALES
@@ -499,10 +489,8 @@ function addBlocker(w, h, x, y, z, rz, ry = 0) {
   scene.add(mesh);
 }
 
-if (!lowEnd) {
-  addBlocker(1.05, 7, 3.45, 4.8, 1.95, -.53, -.22);
-  addBlocker(.62, 7, 4.55, 4.7, 2.22, -.53, -.22);
-}
+addBlocker(1.05, 7, 3.45, 4.8, 1.95, -.53, -.22);
+addBlocker(.62, 7, 4.55, 4.7, 2.22, -.53, -.22);
 
 // ============================================================
 // CARGA DIRECTA DEL GLB
@@ -539,9 +527,7 @@ loader.load(
         }
 
         if ("envMapIntensity" in mat) {
-          mat.envMapIntensity = QUALITY.useEnvironment
-            ? (mobile ? .46 : .56)
-            : 0;
+          mat.envMapIntensity = .58;
         }
 
         mat.needsUpdate = true;
